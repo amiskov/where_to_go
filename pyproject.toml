@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "where-to-go"
+version = "0.1.0"
+description = "Educational project about finding nice places."
+authors = ["Andrey Miskov <amiskov@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^4.2.5"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.15.0"
+django-extensions = "^3.2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
