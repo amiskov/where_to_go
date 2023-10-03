@@ -1,6 +1,6 @@
 from django.forms.models import model_to_dict
 from django.views.generic import TemplateView, View
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, resolve_url
 from django.http import JsonResponse
 
 from places.models import Place
@@ -29,7 +29,7 @@ class IndexView(TemplateView):
                 "properties": {
                     "title": place.title,
                     "placeId": place.pk,
-                    "detailsUrl": f'places/{place.pk}'
+                    "detailsUrl": resolve_url('place', pk=place.pk)
                 },
             })
         data = {
