@@ -4,6 +4,10 @@ from .models import Place, PlaceImage
 
 class PlaceImageAdminInline(admin.TabularInline):
     model = PlaceImage
+    verbose_name = 'Фотография'
+    verbose_name_plural = 'Фотографии'
+    model.image.field.verbose_name = 'Фото'
+    model.__str__ = lambda _: ''
 
 
 @admin.register(Place)
