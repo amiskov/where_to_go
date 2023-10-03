@@ -8,11 +8,10 @@ from places.models import Place
 
 class PlaceView(View):
     def get(self, request, pk):
-        place_qs = Place.objects.filter(pk=pk).prefetch_related('images')
-        place = get_object_or_404(place_qs)
+        place = get_object_or_404(Place, pk=pk)
         place_dict = model_to_dict(place)
         place_dict['imgs'] = [img.image.url for img in place.images.all()]
-        return JsonResponse(place_dict)
+        return UTF8JsonResponse(place_dict)
 
 
 class IndexView(TemplateView):
@@ -42,3 +41,10 @@ class IndexView(TemplateView):
             'data': data
         }
         return render(request, 'index.html', context=context)
+
+
+class UTF8JsonResponse(JsonResponse):
+    def __init__(self, *args, json_dumps_params=None, **kwargs):
+        json_dumps_params = {"ensure_ascii": False,
+                             **(json_dumps_params or {})}
+        super().__init__(*args, json_dumps_params=json_dumps_params, **kwargs)
