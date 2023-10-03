@@ -38,6 +38,9 @@
       width: 100px;
     }
   </style>
+
+  {{ data|json_script:"places-geojson" }}
+
   <script id="places-geojson" type="application/json">
     {
       "type": "FeatureCollection",
