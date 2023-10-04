@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Third party
     'django_extensions',
+    'adminsortable2',
 
     # Apps
     'places',

@@ -19,5 +19,8 @@ class PlaceImage(models.Model):
     image = models.ImageField('Картинка',)
     position = models.IntegerField('Позиция')
 
+    class Meta:
+        ordering = ['position']
+
     def __str__(self):
         return f'Картинка {self.position} для {self.place.title}'
