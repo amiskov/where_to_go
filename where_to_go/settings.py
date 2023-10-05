@@ -166,6 +166,7 @@ STORAGES = {
         "BACKEND": static_backend,
         "OPTIONS": {
             "root_path": SFTP_STORAGE_ROOT + "staticfiles/",
+            "base_url": "/static/",
             'params': {
                 "username": 'tgbot',
                 "password": SFTP_STORAGE_PASS,
