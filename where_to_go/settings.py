@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # Third party
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -149,13 +151,11 @@ SFTP_STORAGE_ROOT = env.str('SFTP_STORAGE_ROOT', '')
 
 media_backend = "django.core.files.storage.FileSystemStorage" if DEBUG \
     else "storages.backends.sftpstorage.SFTPStorage"
-static_backend = "django.contrib.staticfiles.storage.StaticFilesStorage" if DEBUG \
-    else "storages.backends.sftpstorage.SFTPStorage"
 STORAGES = {
     "default": {
         "BACKEND": media_backend,
         "OPTIONS": {
-            "root_path": SFTP_STORAGE_ROOT + "media/",
+            "root_path": SFTP_STORAGE_ROOT,
             'params': {
                 "username": 'tgbot',
                 "password": SFTP_STORAGE_PASS,
@@ -163,14 +163,6 @@ STORAGES = {
         }
     },
     "staticfiles": {
-        "BACKEND": static_backend,
-        "OPTIONS": {
-            "root_path": SFTP_STORAGE_ROOT + "staticfiles/",
-            "base_url": "/static/",
-            'params': {
-                "username": 'tgbot',
-                "password": SFTP_STORAGE_PASS,
-            }
-        }
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
