@@ -21,6 +21,12 @@ ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,...
 poetry run python manage.py migrate
 ```
 
+Создайте главного администратора:
+
+```sh
+poetry run python manage.py createsuperuser
+```
+
 ## Запуск для разработки
 Запустите встроенный Джанго-сервер следующей командой:
 

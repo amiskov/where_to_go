@@ -3,7 +3,7 @@ name = "where-to-go"
 version = "0.1.0"
 description = "Educational project about finding nice places."
 authors = ["Andrey Miskov <amiskov@gmail.com>"]
-readme = "README.md"
+readme = "readme.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
