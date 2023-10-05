@@ -12,6 +12,7 @@ pillow = "^10.0.1"
 django-extensions = "^3.2.3"
 django-admin-sortable2 = "^2.1.10"
 django-tinymce = "^3.6.1"
+environs = "^9.5.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.15.0"
