@@ -128,7 +128,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -137,3 +138,38 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+SFTP_STORAGE_HOST = env.str('SFTP_STORAGE_HOST', '')
+SFTP_STORAGE_USER = env.str('SFTP_STORAGE_USER', '')
+SFTP_STORAGE_PASS = env.str('SFTP_STORAGE_PASS', '')
+
+# Path to store staticfiles & media on the server.
+# Project root path used with additions in `OPTIONS` below in `STORAGES` section.
+SFTP_STORAGE_ROOT = env.str('SFTP_STORAGE_ROOT', '')
+
+static_backend = "django.core.files.storage.FileSystemStorage" if DEBUG \
+    else "storages.backends.sftpstorage.SFTPStorage"
+media_backend = "django.contrib.staticfiles.storage.StaticFilesStorage" if DEBUG \
+    else "storages.backends.sftpstorage.SFTPStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": media_backend,
+        "OPTIONS": {
+            "root_path": SFTP_STORAGE_ROOT + "media/",
+            'params': {
+                "username": 'tgbot',
+                "password": SFTP_STORAGE_PASS,
+            }
+        }
+    },
+    "staticfiles": {
+        "BACKEND": static_backend,
+        "OPTIONS": {
+            "root_path": SFTP_STORAGE_ROOT + "staticfiles/",
+            'params': {
+                "username": 'tgbot',
+                "password": SFTP_STORAGE_PASS,
+            }
+        }
+    },
+}
