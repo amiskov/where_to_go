@@ -11,7 +11,7 @@ collectstatic:
 runprod:
 	$(MAKE) mig && \
 	$(MAKE) collectstatic && \
-	rm gunicorn_error.log && \
+	rm -f gunicorn_error.log && \
 	poetry run gunicorn where_to_go.wsgi \
 		--error-logfile gunicorn_error.log \
 		-b 0.0.0.0:5001 \

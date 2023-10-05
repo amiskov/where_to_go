@@ -147,9 +147,9 @@ SFTP_STORAGE_PASS = env.str('SFTP_STORAGE_PASS', '')
 # Project root path used with additions in `OPTIONS` below in `STORAGES` section.
 SFTP_STORAGE_ROOT = env.str('SFTP_STORAGE_ROOT', '')
 
-static_backend = "django.core.files.storage.FileSystemStorage" if DEBUG \
+media_backend = "django.core.files.storage.FileSystemStorage" if DEBUG \
     else "storages.backends.sftpstorage.SFTPStorage"
-media_backend = "django.contrib.staticfiles.storage.StaticFilesStorage" if DEBUG \
+static_backend = "django.contrib.staticfiles.storage.StaticFilesStorage" if DEBUG \
     else "storages.backends.sftpstorage.SFTPStorage"
 STORAGES = {
     "default": {
