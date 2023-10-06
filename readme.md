@@ -5,7 +5,9 @@
 - [Панель администратора](http://v1131340.hosted-by-vdsina.ru:5001/admin) (логин и пароль отправлен в сообщении к ревью).
 
 ## Установка и запуск
-Установка через [Poetry](https://python-poetry.org). Склонируйте репозиторий и запустите установку. Poetry сама создать окружение:
+Этот раздел актуален и для локальной разработки и для деплоя.
+
+Установка через [Poetry](https://python-poetry.org). Склонируйте репозиторий и запустите установку:
 
 ```sh
 poetry install
@@ -16,10 +18,10 @@ poetry install
 ```ini
 DEBUG=False # True для локальной разработки
 SECRET_KEY='...'
-ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,...
+ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,... # добавье ваш домен или IP
 ```
 
-Далее, накатите миграции:
+Запустите миграции:
 
 ```sh
 poetry run python manage.py migrate
@@ -39,25 +41,15 @@ poetry run python manage.py runserver
 ```
 
 ## Запук на сервере
-На сервере сайт запускается на [Gunicorn](https://gunicorn.org) с реверс-прокси через Nginx. Рекомендуемый порядок действий:
+На сервере сайт запускается на [Gunicorn](https://gunicorn.org) с реверс-прокси через Nginx.
+
+Рекомендуемый порядок действий после выполнения команд из раздела «Установка и запуск»:
 
 ```sh
-# перейти в директорию проекта
-cd <project dir>
-
-# установить зависимости
-poetry install
-
-# запустить миграции
-poetry run python manage.py migrate
-
 # собрать статику
 poetry run python manage.py collectstatic
 
-# создать администратора
-poetry run python manage.py createsuperuser
-
-# узнать путь к созданному окружению (Executable в выводе)
+# узнать путь к Python-окружению (Executable в выводе)
 poetry env info
 # Virtualenv
 # ...
@@ -65,7 +57,7 @@ poetry env info
 # ...
 ```
 
-Запустить Django-приложение через Gunicorn можно следующей командой, которую для удобства можно сохранить в директории проекта в файле `start.sh`:
+Запустить Django-приложение через Gunicorn можно следующей командой, которую для удобства мы сохраним в файле `start.sh` в директории проекта:
 
 ```sh
 #!/usr/bin/env bash
@@ -76,7 +68,7 @@ poetry env info
     where_to_go.wsgi:application
 ```
 
-`start.sh` можно использовать при [создании сервиса](https://dvmn.org/encyclopedia/deploy/systemd/) для `systemd`. Рекомендуемый конфиг:
+Используем `start.sh` [сервисе](https://dvmn.org/encyclopedia/deploy/systemd/) для `systemd`:
 
 ```ini
 ; /etc/systemd/system/where_to_go.service
@@ -93,7 +85,7 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-За отдачу статики (JS, CSS, иконки) отвечает [Whitenoise](https://whitenoise.readthedocs.io/en/latest/), для отдачи загружаемых фотографий нужно [настроить nginx](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/).
+За отдачу статики (JS, CSS, иконки) отвечает [Whitenoise](https://whitenoise.readthedocs.io/en/latest/), он работает без дополнительных настроек. Для отдачи загружаемых фотографий нужно [настроить Nginx](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/).
 
 Прмер конфига для Nginx, где Django-приложение запускается на `localhost:5551` с реверс-прокси на `http://<YOUR-ADDRESS>`:
 
