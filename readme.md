@@ -84,18 +84,22 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-За отдачу статики (JS, CSS, иконки) отвечает [Whitenoise](https://whitenoise.readthedocs.io/en/latest/), он работает без дополнительных настроек.
+За [отдачу статики и загружаемых фотографий](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/) на сервере отвечает Nginx.
 
-Для отдачи загружаемых фотографий нужно [настроить Nginx](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/).
-
-Прмер конфига для Nginx, где Django-приложение запускается на `localhost:5551` с Nginx в качестве реверс-прокси на `http://<YOUR-ADDRESS>`:
+Прмер конфига, где Django-приложение запускается на `localhost:5551` с Nginx в качестве реверс-прокси на `http://<YOUR-ADDRESS>`:
 
 ```nginx
 server {
   listen <YOUR-ADDRESS>:80;
 
   location /media/ {
-    alias /var/www/projects/where_to_go/media/;
+    alias /path/to/where_to_go/media/;
+  }
+
+  location = /favicon.ico { access_log off; log_not_found off; }
+
+  location /static/ {
+    alias /path/to/where_to_go/staticfiles/;
   }
 
   location / {
