@@ -22,6 +22,7 @@ class PlaceImage(models.Model):
 
     class Meta:
         ordering = ['position']
+        unique_together = ('place', 'image')
 
     def __str__(self):
-        return f'Картинка {self.position} для {self.place.title}'
+        return f'{self.image} из {self.place.title}'
