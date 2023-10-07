@@ -729,21 +729,7 @@ files = [
     {file = "wcwidth-0.2.6.tar.gz", hash = "sha256:a5220780a404dbe3353789870978e472cfe477761f06ee55077256e509b156d0"},
 ]
 
-[[package]]
-name = "whitenoise"
-version = "6.5.0"
-description = "Radically simplified static file serving for WSGI applications"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "whitenoise-6.5.0-py3-none-any.whl", hash = "sha256:16468e9ad2189f09f4a8c635a9031cc9bb2cdbc8e5e53365407acf99f7ade9ec"},
-    {file = "whitenoise-6.5.0.tar.gz", hash = "sha256:15fe60546ac975b58e357ccaeb165a4ca2d0ab697e48450b8f0307ca368195a8"},
-]
-
-[package.extras]
-brotli = ["Brotli"]
-
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "bdbd018b5cf6bce636788faee1ffca1204de438c92ca50623bce6a443e501fd5"
+content-hash = "d4be8dcd9f52f329d43ada6021d62a72123c7d83d562037a4f9c709b1433a03c"
