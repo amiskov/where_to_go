@@ -1,8 +1,11 @@
-import requests
 import logging
+
+import backoff
+import requests
 from django.conf import settings
-from places.models import Place, PlaceImage
 from django.core.files.base import ContentFile
+
+from places.models import Place, PlaceImage
 
 
 def create_place(url: str) -> Place:
@@ -19,34 +22,37 @@ def create_place(url: str) -> Place:
         lat=place_content['coordinates']['lat'],
         lon=place_content['coordinates']['lng'],
     )
+    create_place_images(place, place_content['imgs'])
+    return place
 
+
+def create_place_images(place: Place, image_urls: list[str]):
+    """Create PlaceImages from `image_urls` and save them for `place`."""
     position = 0
-    for image_url in place_content['imgs']:
+    for image_url in image_urls:
         filename = image_url.split('/')[-1]
+
         if not is_image(filename):
             logging.error(f'{filename} is not an image, skipping.')
             continue
 
-        img_content = download_image(image_url)
-
-        place_image, _ = PlaceImage.objects.get_or_create(
-            place=place, position=position,)
-
-        place_image.image.save(filename, ContentFile(img_content))
-
-        logging.info(f'PlaceImage created: {str(place_image)}')
-        position += 1
-
+        try:
+            image_bytes = download_image(image_url)
+            place_image, _ = PlaceImage.objects.get_or_create(place=place,
+                                                              position=position,)
+            place_image.image.save(filename, ContentFile(image_bytes))
+            position += 1
+        except requests.HTTPError as e:
+            logging.error(f'Failed to load {image_url}: {e}')
     return place
 
 
-def download_image(url: str, params=None) -> bytes:
+def download_image(url: str) -> bytes:
     """Download an image by `url` to `dir`.
 
     `url` must have a file extension at the end (`.png`, `.jpg`, etc).
     """
-    response = requests.get(url, params=params)
-    response.raise_for_status()
+    response = make_request(url)
 
     images_path = settings.MEDIA_ROOT
     images_path.mkdir(exist_ok=True)
@@ -61,3 +67,12 @@ def download_image(url: str, params=None) -> bytes:
 
 def is_image(file_name: str) -> bool:
     return file_name.lower().endswith(('.jpg', '.jpeg', '.gif', '.png'))
+
+
+@backoff.on_exception(backoff.expo,
+                      (requests.ConnectionError, requests.Timeout))
+def make_request(url: str, params=None) -> requests.Response:
+    """Return response of the request to the given `url`."""
+    resp = requests.get(url, params=params)
+    resp.raise_for_status()
+    return resp

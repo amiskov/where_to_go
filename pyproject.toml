@@ -17,6 +17,7 @@ gunicorn = "^21.2.0"
 whitenoise = "^6.5.0"
 requests = "^2.31.0"
 django-types = "^0.18.0"
+backoff = "^2.2.1"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.15.0"

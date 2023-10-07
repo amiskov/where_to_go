@@ -1,8 +1,8 @@
 import logging
+from urllib.parse import unquote
 
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
-from urllib.parse import unquote
 
 from ._place_loader import create_place
 
@@ -10,6 +10,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
 )
+logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
 class Command(BaseCommand):
@@ -21,7 +22,8 @@ class Command(BaseCommand):
                 create_place(url)
             except IntegrityError as err:
                 filename = unquote(url.split('/')[-1])
-                logging.error(f'Place from {filename} already exists with different data.')
+                logging.error(
+                    f'Place from {filename} already exists with different data: {err}')
 
     def add_arguments(self, parser):
         parser.add_argument(dest='urls', nargs='+',
