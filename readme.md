@@ -7,7 +7,7 @@
 ## Установка и запуск
 Этот раздел актуален и для локальной разработки и для деплоя.
 
-Установка через [Poetry](https://python-poetry.org). Склонируйте репозиторий и запустите установку:
+Склонируйте репозиторий и запустите установку через [Poetry](https://python-poetry.org):
 
 ```sh
 poetry install
@@ -34,14 +34,14 @@ poetry run python manage.py createsuperuser
 ```
 
 ## Запуск для разработки
-Запустите встроенный Джанго-сервер следующей командой:
+Запустите встроенный Джанго-сервер:
 
 ```sh
 poetry run python manage.py runserver
 ```
 
 ## Запук на сервере
-На сервере сайт запускается на [Gunicorn](https://gunicorn.org) с реверс-прокси через Nginx.
+На сервере сайт работает на [Gunicorn](https://gunicorn.org) с реверс-прокси через Nginx.
 
 Рекомендуемый порядок действий после выполнения команд из раздела «Установка и запуск»:
 
@@ -49,15 +49,14 @@ poetry run python manage.py runserver
 # собрать статику
 poetry run python manage.py collectstatic
 
-# узнать путь к Python-окружению (Executable в выводе)
+# узнать путь к Python-окружению проекта (Executable в выводе)
 poetry env info
-# Virtualenv
 # ...
 # Executable: /home/USERNAME/.../bin/python
 # ...
 ```
 
-Запустить Django-приложение через Gunicorn можно следующей командой, которую для удобства мы сохраним в файле `start.sh` в директории проекта:
+Запустить Django-приложение через Gunicorn следующей командой, которую для удобства мы сохраним в файле `start.sh` в директории проекта:
 
 ```sh
 #!/usr/bin/env bash
@@ -68,7 +67,7 @@ poetry env info
     where_to_go.wsgi:application
 ```
 
-Используем `start.sh` [сервисе](https://dvmn.org/encyclopedia/deploy/systemd/) для `systemd`:
+Используем `start.sh` в [юните](https://dvmn.org/encyclopedia/deploy/systemd/) для `systemd`:
 
 ```ini
 ; /etc/systemd/system/where_to_go.service
@@ -85,9 +84,11 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-За отдачу статики (JS, CSS, иконки) отвечает [Whitenoise](https://whitenoise.readthedocs.io/en/latest/), он работает без дополнительных настроек. Для отдачи загружаемых фотографий нужно [настроить Nginx](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/).
+За отдачу статики (JS, CSS, иконки) отвечает [Whitenoise](https://whitenoise.readthedocs.io/en/latest/), он работает без дополнительных настроек.
 
-Прмер конфига для Nginx, где Django-приложение запускается на `localhost:5551` с реверс-прокси на `http://<YOUR-ADDRESS>`:
+Для отдачи загружаемых фотографий нужно [настроить Nginx](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/).
+
+Прмер конфига для Nginx, где Django-приложение запускается на `localhost:5551` с Nginx в качестве реверс-прокси на `http://<YOUR-ADDRESS>`:
 
 ```nginx
 server {
@@ -102,4 +103,21 @@ server {
     proxy_pass http://localhost:5551/;
   }
 }
+```
+
+## Загрузка данных из JSON
+Предусмотрена команда для загрузки данных о местах в JSON по URL ([пример](https://github.com/devmanorg/where-to-go-places/blob/master/places/Водопад%20Радужный.json)). У каждого места должно быть уникальное название. При расхождении в описании и координатах сохранятся уже существующие данные (данные из JSON проигнорируются).
+
+Примеры использования:
+
+```sh
+# загрузить данные об одном месте
+poetry run python manage.py load_place http://.../place.json
+
+# можно передать несколько URL-ов
+poetry run python manage.py load_place http://.../place1.json http://.../place1.json
+
+# удобно сохранить все URL-ы в текстовом файле (здесь places.txt)
+# каждый на отдельной строке и одной командой загрузить их все
+poetry run python manage.py load_place $(cat places.txt)
 ```

@@ -60,7 +60,7 @@ def download_image(url: str) -> bytes:
     filename = url.split('/')[-1]
     image_fullpath = images_path.joinpath(filename)
     if image_fullpath.exists():
-        logging.info(f'{filename} already exists.')
+        logging.warn(f'{filename} already exists.')
         return image_fullpath.read_bytes()
     return response.content
 
