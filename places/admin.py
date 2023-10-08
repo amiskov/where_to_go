@@ -21,7 +21,7 @@ class PlaceImageAdminInline(SortableInlineAdminMixin, admin.TabularInline):
 
     def preview(self, obj):
         try:
-            return format_html(f'<img src="{obj.image.url}" height="50">')
+            return format_html('<img src="{}" height="50">', obj.image.url)
         except Exception as e:
             logger.error(f'Failed rendering preview for {obj}: {e}')
 
