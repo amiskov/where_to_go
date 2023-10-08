@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import logging.config
 from pathlib import Path
 
 from environs import Env
@@ -29,6 +30,12 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', False)
+
+# Extend default logging config from a file
+LOGGING_CONFIG_FILE = env.str('LOGGING_CONFIG_FILE', '')
+if LOGGING_CONFIG_FILE:
+    logging.config.fileConfig(BASE_DIR / LOGGING_CONFIG_FILE,
+                              disable_existing_loggers=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
@@ -139,19 +146,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-
-if not DEBUG:
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-            },
-        },
-        "root": {
-            "handlers": ["console"],
-            "level": "WARNING",
-        },
-    }

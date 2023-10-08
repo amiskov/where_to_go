@@ -23,11 +23,39 @@ poetry install --without dev
 DEBUG=False # True для локальной разработки
 SECRET_KEY='...'
 ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,... # добавьте ваш домен или IP
+LOGGING_CONFIG_FILE=logging.ini # опционально
 ```
 
 - `DEBUG=True` включает режим отладки: Django будет выводить подробные сообщения об ошибках прямо в браузере. Критически важно [при деплое указать](https://docs.djangoproject.com/en/4.2/ref/settings/#std:setting-DEBUG) `DEBUG=False`. По умолчанию установлен в `False.`
 - `SECRET_KEY` - уникальный набор символов, используется при генерации кук, токенов и пр. важных для безопасности сущностей. сгенерировать его [можно так](https://stackoverflow.com/a/57678930). Указать нужно обязательно, без него сайт не запустится.
 - `ALLOWED_HOSTS` - хосты (домены или IP), которые может обслуживать данный сайт. Указание конкретных разрешённых хостов важно для предотвращения некоторых видов атак, параметр обязателен для заполнения для обслуживания любых клиентов, отличных от `localhost`.
+- `LOGGING_CONFIG_FILE` - путь к [файлу с дополнительными настройками логгера](https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig) относительно корня проекта. В этом файле можно расширить настройки логирования Django по-умолчанию.
+
+Пример файла `logging.ini` с дополнительной конфигурацией логирования:
+
+```ini
+[loggers]
+keys=root
+
+[handlers]
+keys=fileHandler
+
+[formatters]
+keys=simpleFormatter
+
+[logger_root]
+level=DEBUG
+handlers=fileHandler
+
+[handler_fileHandler]
+class=FileHandler
+level=DEBUG
+formatter=simpleFormatter
+args=("file.log",)
+
+[formatter_simpleFormatter]
+format=%(asctime)s %(name)s - %(levelname)s:%(message)s
+```
 
 Запустите миграции:
 
