@@ -9,9 +9,9 @@ from places.models import Place
 class PlaceView(View):
     def get(self, request, pk):
         place = get_object_or_404(Place, pk=pk)
-        place_dict = model_to_dict(place)
-        place_dict['imgs'] = [img.image.url for img in place.images.all()]
-        return UTF8JsonResponse(place_dict)
+        serialized_place = model_to_dict(place)
+        serialized_place['imgs'] = [img.image.url for img in place.images.all()]
+        return UTF8JsonResponse(serialized_place)
 
 
 class IndexView(TemplateView):
