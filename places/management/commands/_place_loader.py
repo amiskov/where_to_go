@@ -49,12 +49,15 @@ def create_place_images(place: Place, image_urls: list[str]):
     return place
 
 
+@backoff.on_exception(backoff.expo,
+                      (requests.ConnectionError, requests.Timeout))
 def download_image(url: str) -> bytes:
     """Download an image by `url` to `dir`.
 
     `url` must have a file extension at the end (`.png`, `.jpg`, etc).
     """
-    response = make_request(url)
+    response = requests.get(url)
+    response.raise_for_status()
 
     images_path = settings.MEDIA_ROOT
     images_path.mkdir(exist_ok=True)
@@ -69,12 +72,3 @@ def download_image(url: str) -> bytes:
 
 def is_image(file_name: str) -> bool:
     return file_name.lower().endswith(('.jpg', '.jpeg', '.gif', '.png'))
-
-
-@backoff.on_exception(backoff.expo,
-                      (requests.ConnectionError, requests.Timeout))
-def make_request(url: str, params=None) -> requests.Response:
-    """Return response of the request to the given `url`."""
-    resp = requests.get(url, params=params)
-    resp.raise_for_status()
-    return resp
