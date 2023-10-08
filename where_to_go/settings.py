@@ -54,12 +54,14 @@ INSTALLED_APPS = [
     'django_extensions',
     'adminsortable2',
     'tinymce',
+    'debug_toolbar',
 
     # Apps
     'places',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -146,3 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

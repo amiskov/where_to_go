@@ -8,7 +8,10 @@ from places.models import Place
 
 class PlaceView(View):
     def get(self, request, pk):
-        place = get_object_or_404(Place, pk=pk)
+        place = get_object_or_404(
+            Place.objects.prefetch_related('images'),
+            pk=pk
+        )
         serialized_place = model_to_dict(place)
         serialized_place['imgs'] = [img.image.url for img in place.images.all()]
         return UTF8JsonResponse(serialized_place)
