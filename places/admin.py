@@ -20,7 +20,8 @@ class PlaceImageAdminInline(SortableInlineAdminMixin, admin.TabularInline):
     readonly_fields = ['preview']
 
     def preview(self, obj):
-        return format_html('<img src="{}" height="50">', obj.image.url)
+        img = '<img src="{}" style="max-height: 200px; max-width: 200px">'
+        return format_html(img, obj.image.url)
 
 
 @admin.register(Place)
