@@ -17,10 +17,12 @@ def create_place(url: str) -> Place:
 
     place, _ = Place.objects.get_or_create(
         title=place_content['title'],
-        short_description=place_content['description_short'],
-        long_description=place_content['description_long'],
-        lat=place_content['coordinates']['lat'],
-        lon=place_content['coordinates']['lng'],
+        defaults={
+            'short_description': place_content['description_short'],
+            'long_description': place_content['description_long'],
+            'lat': place_content['coordinates']['lat'],
+            'lon': place_content['coordinates']['lng'],
+        }
     )
     create_place_images(place, place_content['imgs'])
     return place
