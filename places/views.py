@@ -31,13 +31,13 @@ class IndexView(TemplateView):
                     "detailsUrl": resolve_url('place', pk=place.pk)
                 },
             })
-        data = {
+        feature_collection = {
             "type": "FeatureCollection",
             "features": features
         }
 
         context = {
-            'data': data
+            'feature_collection': feature_collection
         }
         return render(request, 'index.html', context=context)
 

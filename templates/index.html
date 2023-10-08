@@ -39,7 +39,7 @@
     }
   </style>
 
-  {{ data|json_script:"places-geojson" }}
+  {{ feature_collection|json_script:"places-geojson" }}
 
   {% verbatim %}
   <script id="app-template" type="text/template">
