@@ -1,8 +1,12 @@
+import logging
+
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import Place, PlaceImage
+
+logger = logging.getLogger(__name__)
 
 
 class PlaceImageAdminInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -19,7 +23,7 @@ class PlaceImageAdminInline(SortableInlineAdminMixin, admin.TabularInline):
         try:
             return format_html(f'<img src="{obj.image.url}" height="50">')
         except Exception as e:
-            print(e)
+            logger.error(f'Failed rendering preview for {obj}: {e}')
 
 
 @admin.register(Place)

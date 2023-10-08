@@ -19,7 +19,6 @@ class IndexView(TemplateView):
         places = Place.objects.all()
         features = []
         for place in places:
-            print(place.title)
             features.append({
                 "type": "Feature",
                 "geometry": {
