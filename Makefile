@@ -10,3 +10,5 @@ collectstatic:
 	poetry run python manage.py collectstatic --no-input
 load:
 	poetry run python manage.py load_place $$(cat places.txt)
+isort:
+	poetry run isort . --skip-glob **/migrations

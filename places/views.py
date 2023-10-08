@@ -1,7 +1,7 @@
 from django.forms.models import model_to_dict
-from django.views.generic import TemplateView, View
-from django.shortcuts import render, get_object_or_404, resolve_url
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render, resolve_url
+from django.views.generic import TemplateView, View
 
 from places.models import Place
 
