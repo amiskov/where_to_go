@@ -24,7 +24,8 @@ class PlaceImage(models.Model):
                               on_delete=models.CASCADE)
     image = models.ImageField('Картинка',)
     position = models.PositiveIntegerField('Порядковый номер', default=0,
-                                           blank=False, null=False)
+                                           blank=False, null=False,
+                                           db_index=True)
 
     class Meta:
         verbose_name = 'Фото'
