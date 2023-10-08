@@ -17,8 +17,8 @@ def create_place(url: str) -> Place:
 
     place, _ = Place.objects.get_or_create(
         title=place_content['title'],
-        description_short=place_content['description_short'],
-        description_long=place_content['description_long'],
+        short_description=place_content['description_short'],
+        long_description=place_content['description_long'],
         lat=place_content['coordinates']['lat'],
         lon=place_content['coordinates']['lng'],
     )
