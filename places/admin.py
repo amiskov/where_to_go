@@ -20,10 +20,7 @@ class PlaceImageAdminInline(SortableInlineAdminMixin, admin.TabularInline):
     readonly_fields = ['preview']
 
     def preview(self, obj):
-        try:
-            return format_html('<img src="{}" height="50">', obj.image.url)
-        except Exception as e:
-            logger.error(f'Failed rendering preview for {obj}: {e}')
+        return format_html('<img src="{}" height="50">', obj.image.url)
 
 
 @admin.register(Place)
