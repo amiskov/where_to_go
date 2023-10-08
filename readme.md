@@ -10,7 +10,11 @@
 Склонируйте репозиторий и запустите установку через [Poetry](https://python-poetry.org):
 
 ```sh
+# для локальной разработки
 poetry install
+
+# для прода, без вспомогательных зависимостей
+poetry install --without dev
 ```
 
 Создайте файл `.env` со следующими параметрами:
@@ -18,7 +22,7 @@ poetry install
 ```ini
 DEBUG=False # True для локальной разработки
 SECRET_KEY='...'
-ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,... # добавье ваш домен или IP
+ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1,... # добавьте ваш домен или IP
 ```
 
 Запустите миграции:
@@ -40,7 +44,7 @@ poetry run python manage.py createsuperuser
 poetry run python manage.py runserver
 ```
 
-## Запук на сервере
+## Запуск на сервере
 На сервере сайт работает на [Gunicorn](https://gunicorn.org) с реверс-прокси через Nginx.
 
 Рекомендуемый порядок действий после выполнения команд из раздела «Установка и запуск»:
@@ -86,7 +90,7 @@ WantedBy=multi-user.target
 
 За [отдачу статики и загружаемых фотографий](https://dvmn.org/encyclopedia/web-server/deploy-django-nginx-gunicorn/) на сервере отвечает Nginx.
 
-Прмер конфига, где Django-приложение запускается на `localhost:5551` с Nginx в качестве реверс-прокси на `http://<YOUR-ADDRESS>`:
+Пример конфига, где Django-приложение запускается на `localhost:5551` с Nginx в качестве реверс-прокси на `http://<YOUR-ADDRESS>`:
 
 ```nginx
 server {
